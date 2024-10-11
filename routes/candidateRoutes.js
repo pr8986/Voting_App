@@ -177,13 +177,28 @@ router.get('/vote/count', async(req, res)=>{
 router.get('/allcandidate', async(req,res )=>{
     try{
         //find all candidates and select only the name and party field,excluding _id
-        const candidate = await Candidate.find({}, 'name party -_id');
+        const candidate = await Candidate.find();
 
         //return the list of candidate
         res.status(200).json(candidate);
     }catch(err){
         console.log(err);
         res.status(500).json({message:'Internal Server Error'})
+    }
+})
+
+router.get('/getCandidate/:id',async (req,res)=> {
+     try{
+        const candidate = await Candidate.findById(req.params.id);
+
+        if(!candidate){
+            return res.status(404).json({ message:"Candidate not found"})
+        }
+
+        return res.status(200).json(candidate);
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({message:'Internal Server Error'})
     }
 })
 
